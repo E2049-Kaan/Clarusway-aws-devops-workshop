@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This template creates an EC2 instance to run a static website application deployed with Apache Web Server
+   
+Resources:
+  WebServerSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: Base Security Group
+      GroupName: ApacheSG
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0        
+  KittensCarouselStaticWebsiteCFInstance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: ami-0c94855ba95c71c99
+      InstanceType: t2.micro
+      KeyName: waltman_aws_es2
+      Tags:
+        - Key: Name
+          Value: ApacheWebEC2
+      UserData: 
+        Fn::Base64:
+          !Sub |
+            #! /bin/bash
+            yum update -y
+            yum install -y httpd
+            DATE_TIME=`date`
+            cd /var/www/html
+            wget https://raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/101-kittens-carousel-static-website-ec2/static-web/index.html
+            wget https://raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/101-kittens-carousel-static-website-ec2/static-web/cat0.jpg
+            wget https://raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/101-kittens-carousel-static-website-ec2/static-web/cat1.jpg
+            wget https://raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/101-kittens-carousel-static-website-ec2/static-web/cat2.jpg
+            systemctl start httpd
+            systemctl enable httpd

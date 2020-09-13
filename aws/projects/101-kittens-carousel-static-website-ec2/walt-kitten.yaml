@@ -5,8 +5,8 @@ Resources:
   WebServerSecurityGroup:
     Type: "AWS::EC2::SecurityGroup"
     Properties:
-      GroupDescription: Base Security Group
-      GroupName: ApacheSG
+      GroupDescription: walt-proje1-sg
+      GroupName: HTTPandSSH
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22

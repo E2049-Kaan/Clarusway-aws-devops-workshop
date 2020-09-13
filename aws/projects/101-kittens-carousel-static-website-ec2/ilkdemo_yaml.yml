@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: This template creates an EC2 instance which enable SSH connection.
+
+Resources:
+  WaltCFInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0c94855ba95c71c99
+      InstanceType: t2.micro
+      KeyName: waltman_aws_es2
+      SecurityGroups: 
+        - HTTPandSSH
+      Tags:
+        - Key: Name
+          Value: walt-cf-instance

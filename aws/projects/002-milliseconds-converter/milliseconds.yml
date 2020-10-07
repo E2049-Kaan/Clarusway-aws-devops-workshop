@@ -1,0 +1,107 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  The Milliseconds Converter Application aims to convert the given time in milliseconds into hours, minutes, and seconds. The application is to be coded in Python and deployed as a web application with Flask on AWS Application Load Balancer with Auto Scaling Group of Elastic Compute Cloud (EC2) Instances using AWS Cloudformation Service.
+Parameters:
+  KeyPairName:
+    Description: Enter the name of your Key Pair for SSH connections
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: Must one of the existing EC2 KeyPair 
+Resources:
+  WebServerSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: Enable HTTP for Flask Web Server #required
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp #required
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+  MyLaunchTemplate:
+    Type: "AWS::EC2::LaunchTemplate"
+    Properties:
+      LaunchTemplateName: !Sub ${AWS::StackName}-launch-template
+      LaunchTemplateData: 
+        BlockDeviceMappings: 
+          - Ebs:
+              VolumeSize: 22
+              VolumeType: gp2
+              DeleteOnTermination: true
+              Encrypted: true
+            DeviceName: /dev/xvda
+        ImageId: ami-0947d2ba12ee1ff75
+        InstanceType: t2.micro
+        KeyName: !Ref KeyPairName
+        SecurityGroupIds: 
+          - !Ref WebServerSecurityGroup
+        Tags:
+        - Key: Name
+          Value: !Sub Web Server of ${AWS::StackName} Stack 
+      UserData: !Base64 |
+          #! /bin/bash
+          yum update -y
+          yum install python3 -y
+          pip3 install flask
+          cd /home/ec2-user
+          wget https://raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/002-milliseconds-converter/app.py
+          mkdir templates
+          cd templates
+          wget https://raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/002-milliseconds-converter/templates/index.html
+          wget https://raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/002-milliseconds-converter/templates/result.html
+          cd ..
+          python3 app.py
+  MyAutoScalingGroup:
+    Type: "AWS::AutoScaling::AutoScalingGroup"
+    Properties:
+      AvailabilityZones:
+        - !GetAZs
+      DesiredCapacity: 2
+      HealthCheckGracePeriod: 90
+      HealthCheckType: ELB
+      LaunchTemplate:
+        !Ref MyLaunchTemplate
+      LoadBalancerNames:
+        - String
+      MaxSize: 3 #required
+      MinSize: 1 #required
+      Tags:
+        - TagProperty
+      TargetGroupARNs:
+        - String
+      VPCZoneIdentifier:
+        - String
+  MyApplicationLoadBalancer:
+    Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
+    Properties:
+      IpAddressType: ipv4
+      SecurityGroups:
+        - !Ref WebServerSecurityGroup
+      Scheme: internet-facing
+      SubnetMappings:
+        - SubnetMapping
+      Subnets:
+        - String
+      Tags:
+        - Tag
+      Type: String
+  
+  MyListener:
+    Type: "AWS::ElasticLoadBalancingV2::Listener"
+    Properties:
+      DefaultActions: #required
+        - Type: forward
+          TargetGroupArn: !Ref MyALBTargetGroup
+      LoadBalancerArn: !Ref  MyApplicationLoadBalancer #required
+      Port: 80 #required
+      Protocol: HTTP #required
+  
+  
+  
+  
+  
+    
+  
+Outputs:

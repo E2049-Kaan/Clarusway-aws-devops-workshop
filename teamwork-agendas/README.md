@@ -12,3 +12,5 @@ List of teamwork agendas for AWS & DevOps learning path as follows;
 - [Teamwork Agenda - 004 : AWS EC2, CF, S3, Linux, Network, GIT](./eu-tw-004-student.pdf)
 
 - [Teamwork Agenda - 005 : AWS EC2, ASG, ELB, RDS, CF, Linux, GIT](./eu-tw-005-student.pdf)
+
+- [Teamwork Agenda - 006 : AWS EC2, ASG, ELB, Root53, CF, Linux, GIT](./eu-tw-006-student.pdf)

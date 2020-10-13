@@ -12,49 +12,50 @@ Resources:
   MyAutoScalingGroup:
     Type: "AWS::AutoScaling::AutoScalingGroup"
     Properties:
-      AvailabilityZones: !GetAZs 
+      AvailabilityZones: !GetAZs
       DesiredCapacity: 2
       HealthCheckGracePeriod: 90
-      HealthCheckType: ELB 
-      LaunchTemplate: 
-        LaunchTemplateId: !Ref MyLaunchTemplate
-        Version: !GetAtt MyLaunchTemplate.LatestVersionNumber
+      HealthCheckType: ELB
+      LaunchTemplate:
+        LaunchTemplateId: !Ref MyInstanceLaunchTemplate
+        Version: !GetAtt MyInstanceLaunchTemplate.LatestVersionNumber
       MaxSize: 3 #required
       MinSize: 1 #required
-      TargetGroupARNs: !Ref MyALBTargetGroup  
-  MyLaunchTemplate:
-    Type: "AWS::AutoScaling::LaunchConfiguration"
+      TargetGroupARNs:
+        - !Ref MyALBTargetGroup
+  MyInstanceLaunchTemplate:
+    Type: "AWS::EC2::LaunchTemplate"
     Properties:
-      ImageId: ami-0947d2ba12ee1ff75 #required
-      InstanceType: t2.micro #required
-      KeyName: !Ref KeyName
-      SecurityGroups:
-        - !Ref MyInstanceSecGroup
-      TagSpecifications:
-        - ResourceType: instance
-          Tags:
-            - Key: Name
-              Value: !Sub Web Server of ${AWS::StackName} Stack        
-      UserData: !Base64 |
-        #! /bin/bash
-        yum update -y
-        yum install python3 -y
-        pip3 install flask
-        cd /home/ec2-user
-        wget https://raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/002-milliseconds-converter/app.py
-        mkdir templates
-        cd templates
-        wget https://raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/002-milliseconds-converter/templates/index.html
-        wget https://raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/002-milliseconds-converter/templates/result.html
-        cd ..
-        python3 app.py
+      LaunchTemplateData:
+        ImageId: ami-0947d2ba12ee1ff75
+        InstanceType: t2.micro
+        KeyName: !Ref KeyName
+        SecurityGroups:
+            - !Ref MyInstanceSecGroup
+        TagSpecifications:
+            - ResourceType: instance
+              Tags:
+                - Key: Name
+                  Value: !Sub Web Server of ${AWS::StackName}
+        UserData: !Base64 |
+          #! /bin/bash
+          yum update -y
+          yum install python3 -y
+          pip3 install flask
+          cd /home/ec2-user
+          wget https://raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/002-milliseconds-converter/app.py
+          mkdir templates
+          cd templates
+          wget https://raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/002-milliseconds-converter/templates/index.html
+          wget https://raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/002-milliseconds-converter/templates/result.html
+          cd ..
+          python3 app.py
   MyALB:
     Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
     Properties:
-      SecurityGroups:
-        - !Ref MyLoadBalancerSecGroup
-      Subnets:
-        - !Ref Subnets
+      SecurityGroups: 
+        - !GetAtt  MyLoadBalancerSecGroup.GroupId
+      Subnets: !Ref Subnets
   MyALBListener:
     Type: "AWS::ElasticLoadBalancingV2::Listener"
     Properties:
@@ -93,8 +94,8 @@ Resources:
   
 Outputs:
   URL:
-  Description: The URL of the website
-  Value: !Join 
-    - ""
-    - - 'http://'
-      - !GetAtt MyALB.DNSName
+    Description: The URL of the website
+    Value: !Join 
+      - ""
+      - - 'http://'
+        - !GetAtt MyALB.DNSName

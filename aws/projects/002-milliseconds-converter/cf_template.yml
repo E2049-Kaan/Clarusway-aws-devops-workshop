@@ -12,7 +12,7 @@ Resources:
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
-  WebServerSecurityGroupp:
+  WebServerSecurityGroup:
     Type: "AWS::EC2::SecurityGroup"
     Properties:
       GroupDescription: Enable HTTP for App from ALB #required
@@ -51,6 +51,60 @@ Resources:
               FOLDER="https://$TOKEN@raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/002-milliseconds-converter/"
               curl -s --create-dirs -o "/home/ec2-user/templates/index.html" -L "$FOLDER"templates/index.html
               curl -s --create-dirs -o "/home/ec2-user/templates/result.html" -L "$FOLDER"templates/result.html
-              curl -s --create-dirs -o "/home/ec2-user/app.py" -L "$FOLDER"app1.py
-              python3 /home/ec2-user/app.py
+              curl -s --create-dirs -o "/home/ec2-user/app1.py" -L "$FOLDER"app1.py
+              python3 /home/ec2-user/app1.py
+  WebServerTargetGroup:
+    Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
+    Properties:
+      Port: 80
+      Protocol: HTTP
+      TargetType: instance
+      VpcId: !GetAtt WebServerSecurityGroup.VpcId
+  ApplicationLoadBalancer:
+    Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
+    Properties:
+      IpAddressType: ipv4
+      Scheme: internet-facing
+      SecurityGroups:
+        - !GetAtt ALBSecurityGroup.GroupId
+      Subnets:
+        - subnet-000fa321
+        - subnet-0716664a
+        - subnet-1c91652d
+        - subnet-abfd50f4
+        - subnet-b34bead5
+        - subnet-ccdb41c2
+      Type: application 
+  ALBListener:
+    Type: "AWS::ElasticLoadBalancingV2::Listener"
+    Properties:
+      DefaultActions: #required
+        - TargetGroupArn: !Ref WebServerTargetGroup
+        - Type: forward
+      LoadBalancerArn: !Ref ApplicationLoadBalancer #required
+      Port: 80 #required
+      Protocol: HTTP #required
+  WebServerASG:
+    Type: "AWS::AutoScaling::AutoScalingGroup"
+    Properties:
+      AvailabilityZones:
+        - !GetAZs ""
+      DesiredCapacity: 2
+      HealthCheckGracePeriod: 90
+      HealthCheckType: ELB
+      LaunchTemplate: 
+        LaunchTemplateId: !Ref WebServerLaunchTemplate
+        Version: !GetAtt WebServerLaunchTemplate.LatestVersionNumber
+      MaxSize: String #required
+      MinSize: String #required
+      TargetGroupARNs:
+        - !Ref WebServerTargetGroup
+    
+  
+  
 Outputs:
+  WebsiteURL:
+    Description: Milliseconds Converter Application Load Balancer
+    Value: !Sub 
+      - http://${ALBaddress}
+      - ALBaddress: !GetAtt ApplicationLoadBalancer.DNSName

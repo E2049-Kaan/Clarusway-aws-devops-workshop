@@ -9,6 +9,37 @@ Parameters:
     Description: Please enter your KeyName
     Type: AWS::EC2::KeyPair::KeyName
 Resources:
+  PhonebookRDSInstance:
+    Type: "AWS::RDS::DBInstance"
+    Properties:
+      AllocatedStorage: 20
+      DBInstanceClass: db.t2.micro #required
+      DBInstanceIdentifier: phonebookdb
+      DBName: phonebook
+      DBSecurityGroups:
+        - !Ref RDSsg
+      Engine: mysql
+      EngineVersion: 8.0.20
+      MasterUserPassword: clarusway-1
+      MasterUsername: admin
+      Port: String
+      PreferredBackupWindow: String
+      PreferredMaintenanceWindow: String
+      ProcessorFeatures:
+        - ProcessorFeature
+      PromotionTier: Integer
+      PubliclyAccessible: Boolean
+      SourceDBInstanceIdentifier: String
+      SourceRegion: String
+      StorageEncrypted: Boolean
+      StorageType: String
+      Tags:
+        - Tag
+      Timezone: String
+      UseDefaultProcessorFeatures: Boolean
+      VPCSecurityGroups:
+        - String
+  
   MyAutoScalingGroup:
     Type: "AWS::AutoScaling::AutoScalingGroup"
     Properties:
@@ -42,14 +73,18 @@ Resources:
           yum update -y
           yum install python3 -y
           pip3 install flask
+          pip3 install flask-mysql
+          pip3 install SQLAlchemy
+          pip3 install mysql-connector-python
           cd /home/ec2-user
           wget https://raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/002-milliseconds-converter/app.py
           mkdir templates
           cd templates
           wget https://raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/002-milliseconds-converter/templates/index.html
           wget https://raw.githubusercontent.com/E2049-Kaan/Clarusway-aws-devops-workshop/master/aws/projects/002-milliseconds-converter/templates/result.html
+          echo "${PhonebookRDSInstance.Endpoint.Address}" >> /home/ec2-user/dbserver.endpoint
           cd ..
-          python3 app.py
+          python3 new-init.py
   MyALB:
     Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
     Properties:
@@ -80,6 +115,10 @@ Resources:
           FromPort: 80
           ToPort: 80
           SourceSecurityGroupId: !GetAtt MyLoadBalancerSecGroup.GroupId 
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
   MyLoadBalancerSecGroup:
     Type: "AWS::EC2::SecurityGroup"
     Properties:

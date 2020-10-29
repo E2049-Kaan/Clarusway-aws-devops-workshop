@@ -1,47 +1,48 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: |
-  CloudFormation template for milliseconds converter application. This app runs on application load balancer. In addition, it is observed by AutoScalingGroup.
+  Cloudformation template for milliseconds converter application. This app runs on application load balancer. In addition, it is observed by Autoscaling Group
   
 Resources:
   ALBSecurityGroup:
-    Type: "AWS::EC2::SecurityGroup"
+    Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Enable HTTP for ALB #required
+      GroupDescription:  Enable HTTP for ALB
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
+  
   WebServerSecurityGroup:
-    Type: "AWS::EC2::SecurityGroup"
+    Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Enable HTTP for App from ALB #required
+      GroupDescription: Enable HTTP for App from ALB
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
           CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp 
+        - IpProtocol: tcp
           FromPort: 80
-          ToPort: 80         
+          ToPort: 80
           SourceSecurityGroupId: !GetAtt ALBSecurityGroup.GroupId
+  
   WebServerLaunchTemplate:
-    Type: "AWS::EC2::LaunchTemplate"
+    Type: AWS::EC2::LaunchTemplate
     Properties:
-      LaunchTemplateData:
-        InstanceType: t2.micro
-        DisableApiTermination: 'true'
-        KeyName: waltharris
+      LaunchTemplateData: 
         ImageId: ami-0947d2ba12ee1ff75
-        SecurityGroupIds:
-        - !GetAtt WebServerSecurityGroupp.GroupId
+        InstanceType: t2.micro
+        KeyName: serdar
+        SecurityGroupIds: 
+          - !GetAtt WebServerSecurityGroup.GroupId
         TagSpecifications:
-            - ResourceType: instance
-              Tag:
-                - Key: Name  
-                  Value: !Sub Web Server of ${AWS::StackName}
+          - ResourceType: instance
+            Tags:
+              - Key: Name
+                Value: !Sub Web Server of ${AWS::StackName} 
         UserData: 
-          Fn::!Base64:
+          Fn::Base64:
             !Sub |
               #!/bin/bash
               yum update -y
@@ -60,6 +61,7 @@ Resources:
       Protocol: HTTP
       TargetType: instance
       VpcId: !GetAtt WebServerSecurityGroup.VpcId
+
   ApplicationLoadBalancer:
     Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
     Properties:
@@ -80,31 +82,31 @@ Resources:
     Properties:
       DefaultActions: #required
         - TargetGroupArn: !Ref WebServerTargetGroup
-        - Type: forward
+          Type: forward
       LoadBalancerArn: !Ref ApplicationLoadBalancer #required
       Port: 80 #required
       Protocol: HTTP #required
+
   WebServerASG:
     Type: "AWS::AutoScaling::AutoScalingGroup"
     Properties:
       AvailabilityZones:
-        - !GetAZs ""
+        !GetAZs ""
       DesiredCapacity: 2
       HealthCheckGracePeriod: 90
       HealthCheckType: ELB
       LaunchTemplate: 
         LaunchTemplateId: !Ref WebServerLaunchTemplate
         Version: !GetAtt WebServerLaunchTemplate.LatestVersionNumber
-      MaxSize: String #required
-      MinSize: String #required
+      MaxSize: 3 #required
+      MinSize: 1 #required
       TargetGroupARNs:
         - !Ref WebServerTargetGroup
     
-  
-  
+
 Outputs:
   WebsiteURL:
-    Description: Milliseconds Converter Application Load Balancer
+    Description: Milliseconds Converter Application Load Balancer URL
     Value: !Sub 
       - http://${ALBaddress}
       - ALBaddress: !GetAtt ApplicationLoadBalancer.DNSName

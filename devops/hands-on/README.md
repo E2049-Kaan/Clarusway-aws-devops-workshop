@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-# DevOps Hands-on Trainings
-
-List of hands-on trainings within AWS workshop as follows;
-=======
 # DevOps Hands-on Trainings
 
 List of hands-on trainings within DevOps as follows;
@@ -47,5 +42,6 @@ List of hands-on trainings within DevOps as follows;
 
 - [Hands-on Jenkins-05 : Building Jenkins Pipelines and Deploying Applications on Amazon Linux 2 AWS EC2 Instances](./jenkins/jenkins-05-deployment-to-staging-environments)
 
+- [Hands-on Jenkins-06 : Building Jenkins Pipelines on Amazon Linux 2 AWS EC2 Instance](./jenkins/jenkins-06-building-pipeline-with-docker-ecr-python)
 
->>>>>>> 363c38304d2391cba2a5b9e76b7975789d663ea9
+

@@ -149,11 +149,11 @@ sudo kubeadm init --apiserver-advertise-address=<ec2-private-ip> --pod-network-c
 
 > :warning: **Note**: If you are working on `t2.micro` or `t2.small` instances,  use the command with `--ignore-preflight-errors=NumCPU` as shown below to ignore the errors.
 
-```bash
-sudo kubeadm init --apiserver-advertise-address=<ec2 private ip> --pod-network-cidr=172.16.0.0/16 --ignore-preflight-errors=NumCPU
-```
+>```bash
+>sudo kubeadm init --apiserver-advertise-address=<ec2 private ip> --pod-network-cidr=172.16.0.0/16 --ignore-preflight-errors=NumCPU
+>```
 
-> :info: **Note**: There are a bunch of pod network providers and some of them use pre-defined `--pod-network-cidr` block. Check the documentation at the References part. We will use Calico for pod network. Calico can use any `--pod-network-cidr` block.
+> **Note**: There are a bunch of pod network providers and some of them use pre-defined `--pod-network-cidr` block. Check the documentation at the References part. We will use Calico for pod network. Calico can use any `--pod-network-cidr` block.
 
 - In case of problems, use following command to reset the initialization and restart from Part 2 (Setting Up Master Node for Kubernetes).
 

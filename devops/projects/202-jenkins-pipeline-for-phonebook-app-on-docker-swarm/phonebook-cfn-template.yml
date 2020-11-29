@@ -82,7 +82,7 @@ Resources:
       LaunchTemplateData: 
         IamInstanceProfile:
           Arn: !GetAtt EC2ConnectProfile.Arn
-        ImageId: ami-0947d2ba12ee1ff75
+        ImageId: ami-04d29b6f966df1537
         InstanceType: t2.micro
         KeyName: !Ref KeyName
         SecurityGroupIds: 
@@ -116,7 +116,7 @@ Resources:
       LaunchTemplateData: 
         IamInstanceProfile:
           Arn: !GetAtt EC2ConnectProfile.Arn
-        ImageId: ami-0947d2ba12ee1ff75
+        ImageId: ami-04d29b6f966df1537
         InstanceType: t2.micro
         KeyName: !Ref KeyName
         SecurityGroupIds: 
@@ -148,7 +148,7 @@ Resources:
     Type: "AWS::EC2::Instance"
     Properties:
       IamInstanceProfile: !Ref EC2ConnectProfile
-      ImageId: ami-0947d2ba12ee1ff75
+      ImageId: ami-04d29b6f966df1537
       InstanceType: t2.micro
       KeyName: !Ref KeyName
       SecurityGroupIds:
@@ -157,7 +157,7 @@ Resources:
         - Key: Name 
           Value: !Sub Docker Grand Master of ${AWS::StackName}
         - Key: project
-          Value: "203"
+          Value: "202"
       UserData: 
         Fn::Base64:
           !Sub 

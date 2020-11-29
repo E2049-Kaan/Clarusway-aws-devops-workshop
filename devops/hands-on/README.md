@@ -45,3 +45,10 @@ List of hands-on trainings within DevOps as follows;
 - [Hands-on Jenkins-06 : Building Jenkins Pipelines on Amazon Linux 2 AWS EC2 Instance](./jenkins/jenkins-06-building-pipeline-with-docker-ecr-python)
 
 
+# Kubernetes
+
+- [Hands-on Kubernetes-01 : Installing Kubernetes on Ubuntu 20.04 running on AWS EC2 Instances](./kubernetes/kubernetes-01-installing-on-ec2-linux2)
+
+- [Hands-on Kubernetes-02 : Kubernetes Basic Operations](./kubernetes/kubernetes-02-basic-operations)
+
+- [Hands-on Kubernetes-03 : Kubernetes Networking and Service Discovery](./kubernetes/kubernetes-03-networking-service-discovery)

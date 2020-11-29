@@ -241,7 +241,7 @@ stage('build'){
     agent any
     steps{
         sh "docker build -t <namespace>/<project-name> ."
-        sh "docker tag <your-ecr-url>/<namespace>/<project-name>:latest"
+        sh "docker tag <namespace>/<project-name> <your-ecr-url>/<namespace>/<project-name>:latest"
     }
 }
 ```

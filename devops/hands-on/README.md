@@ -118,5 +118,11 @@ List of hands-on trainings within DevOps as follows;
 
 - [Hands-on Kubernetes-05 : Managing Secrets and ConfigMaps](./kubernetes/kubernetes-05-managing-secrets-and-configmaps)
 
+<<<<<<< HEAD
 >>>>>>> fc579953b5d6af626a8dfa853c02ebe7bf1b627e
 - [Hands-on Kubernetes-06 : Kubernetes Volumes](./kubernetes/kubernetes-06-pods-volumes)
+=======
+- [Hands-on Kubernetes-06 : Kubernetes Volumes](./kubernetes/kubernetes-06-pods-volumes)
+
+- [Hands-on EKS-01 : Creating and Managing Kubernetes Cluster with AWS EKS](./kubernetes/eks-01-managing-kubernete-cluster-with-eks)
+>>>>>>> 749f2685838289586bb0e0ce62cb21ec9ac1eb75

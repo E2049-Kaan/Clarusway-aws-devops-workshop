@@ -34,7 +34,7 @@ Phonebook Microservice Web Application aims to create a web application with MyS
 
   - Create two docker images for create/update/delete and search pages using `Dockerfile`s.
 
-  - Deploy the app using `docker compose`. To do so;
+  - Deploy the app using `Kubernetes`. To do so;
 
     - Create a database service using MySQL.
 

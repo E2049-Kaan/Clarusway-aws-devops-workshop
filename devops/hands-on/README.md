@@ -125,4 +125,13 @@ List of hands-on trainings within DevOps as follows;
 - [Hands-on Kubernetes-06 : Kubernetes Volumes](./kubernetes/kubernetes-06-pods-volumes)
 
 - [Hands-on EKS-01 : Creating and Managing Kubernetes Cluster with AWS EKS](./kubernetes/eks-01-managing-kubernete-cluster-with-eks)
+<<<<<<< HEAD
 >>>>>>> 749f2685838289586bb0e0ce62cb21ec9ac1eb75
+=======
+
+- [Hands-on EKS-02 : Dynamic Volume Provisioning and Ingress](./kubernetes/eks-02-DynamicVolumeProvisionining-and-Ingress/)
+
+# Terraform
+
+- [Hands-on Terraform-01 : Terraform Installation and Basic Operations](./terraform/terraform-01-basic-operations/)
+>>>>>>> 1c1a511fc5b3657448592008f64383e6f9cd3d81

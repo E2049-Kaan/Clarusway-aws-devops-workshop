@@ -39,7 +39,7 @@ ssh -i .ssh/call-training.pem ec2-user@ec2-3-133-106-98.us-east-2.compute.amazon
 - Download the current stable release of `Docker Compose` executable.
 
 ```bash
-sudo curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" \
+sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" \
 -o /usr/local/bin/docker-compose
 ```
 
@@ -49,7 +49,7 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
-- Check if the `Docker Compose`is working. Should see something like `docker-compose version 1.26.2, build 1110ad01`
+- Check if the `Docker Compose`is working. Should see something like `docker-compose version 1.27.4, build 1110ad01`
 
 ```bash
 docker-compose --version
